@@ -1,5 +1,5 @@
 /**
-* PHP Email Form Validation - v3.11 (Adapted for Formspree)
+* PHP Email Form Validation - v3.11
 * URL: https://bootstrapmade.com/php-email-form/
 * Author: BootstrapMade.com
 */
@@ -53,25 +53,22 @@
     fetch(action, {
       method: 'POST',
       body: formData,
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Accept': 'application/json'
-      }
+      headers: {'X-Requested-With': 'XMLHttpRequest'}
     })
     .then(response => {
       if( response.ok ) {
-        return response.json();
+        return response.text();
       } else {
         throw new Error(`${response.status} ${response.statusText} ${response.url}`); 
       }
     })
     .then(data => {
       thisForm.querySelector('.loading').classList.remove('d-block');
-      if (data.ok) {
+      if (data.trim() == 'OK') {
         thisForm.querySelector('.sent-message').classList.add('d-block');
         thisForm.reset(); 
       } else {
-        throw new Error(data ? (data.message || data.errors) : 'Form submission failed'); 
+        throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
       }
     })
     .catch((error) => {
